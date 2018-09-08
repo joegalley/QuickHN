@@ -1,0 +1,19 @@
+<resources>
+    <string name="app_name">Quick HN</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="nav_header_title">Android Studio</string>
+    <string name="nav_header_subtitle">android.studio@android.com</string>
+    <string name="nav_header_desc">Navigation header</string>
+    <string name="action_settings">Settings</string>
+
+    <string name="api_item_url">https://hacker-news.firebaseio.com/v0/item/%s.json</string>
+
+    <string-array name="boards">
+        <item>TOP</item>
+        <item>NEW</item>
+        <item>SHOW</item>
+        <item>ASK</item>
+        <item>BEST</item>
+    </string-array>
+</resources>

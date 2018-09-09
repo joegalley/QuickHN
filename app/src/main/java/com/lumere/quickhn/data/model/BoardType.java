@@ -5,5 +5,6 @@ public enum BoardType {
     NEW,
     SHOW,
     ASK,
-    BEST;
+    BEST,
+    JOB;
 }

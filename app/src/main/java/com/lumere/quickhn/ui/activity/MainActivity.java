@@ -47,7 +47,7 @@ public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     private String[] boards;
-    private RecyclerView mRecyclerView;
+
     private RecyclerView.Adapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
 
@@ -58,6 +58,9 @@ public class MainActivity extends AppCompatActivity
 
     @BindInt(R.integer.itemCount)
     protected int itemCount;
+
+    @BindView(R.id.itemList)
+    protected RecyclerView mRecyclerView;
 
     @BindView(R.id.boards_select)
     Spinner boardsSpinner;
@@ -101,16 +104,22 @@ public class MainActivity extends AppCompatActivity
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 switch ((String) parent.getItemAtPosition(position)) {
                     case "TOP":
-                        //showBoard(BoardType.TOP);
-                        showComments(Arrays.asList(121016L, 121109L, 121168L));
+                        showBoard(BoardType.TOP);
                         break;
                     case "NEW":
+                        showBoard(BoardType.NEW);
                         break;
                     case "SHOW":
+                        showBoard(BoardType.SHOW);
                         break;
                     case "ASK":
+                        showBoard(BoardType.ASK);
                         break;
                     case "BEST":
+                        showBoard(BoardType.BEST);
+                        break;
+                    case "JOB":
+                        showBoard(BoardType.JOB);
                         break;
                 }
             }
@@ -120,7 +129,6 @@ public class MainActivity extends AppCompatActivity
             }
         });
 
-        mRecyclerView = (RecyclerView) findViewById(R.id.itemList);
         mRecyclerView.setHasFixedSize(true);
         mLayoutManager = new LinearLayoutManager(this);
         mRecyclerView.setLayoutManager(mLayoutManager);
@@ -129,12 +137,12 @@ public class MainActivity extends AppCompatActivity
     private void showBoard(BoardType boardType) {
         getItemIds(boardType, ids ->
                 getItemsFromIdArray(ids, items -> {
-                    mAdapter = new ItemListAdapter(items);
+                    mAdapter = new ItemListAdapter(MainActivity.this, items);
                     mRecyclerView.setAdapter(mAdapter);
                 }));
     }
 
-    private void showComments(List<Long> commentIds) {
+    public void showComments(List<Long> commentIds) {
         getItemsFromIdArray(commentIds, items -> {
             mAdapter = new CommentListAdapter(items);
             mRecyclerView.setAdapter(mAdapter);
@@ -179,6 +187,8 @@ public class MainActivity extends AppCompatActivity
                             int minutes = (int) ((timeElapsed / secInMin) % 60);
 
                             item.setCreationTime(response.getLong("time"));
+
+                            item.setElapsedTime(hours + "h " + minutes + "m");
                         }
                         if (response.has("title")) {
                             item.setTitle(response.getString("title"));
@@ -256,6 +266,21 @@ public class MainActivity extends AppCompatActivity
         switch (boardType) {
             case TOP:
                 url = "https://hacker-news.firebaseio.com/v0/topstories.json";
+                break;
+            case NEW:
+                url = "https://hacker-news.firebaseio.com/v0/newstories.json";
+                break;
+            case SHOW:
+                url = "https://hacker-news.firebaseio.com/v0/showstories.json";
+                break;
+            case ASK:
+                url = "https://hacker-news.firebaseio.com/v0/askstories.json";
+                break;
+            case BEST:
+                url = "https://hacker-news.firebaseio.com/v0/beststories.json";
+                break;
+            case JOB:
+                url = "https://hacker-news.firebaseio.com/v0/jobstories.json";
                 break;
         }
 

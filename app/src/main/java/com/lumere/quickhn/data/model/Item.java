@@ -21,4 +21,5 @@ public class Item {
     private String title;
     private String parts;
     private int descendants;
+    private String elapsedTime;
 }

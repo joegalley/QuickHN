@@ -3,7 +3,9 @@ package com.lumere.quickhn.ui.activity;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.os.Parcelable;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -29,6 +31,8 @@ import com.lumere.quickhn.data.model.ItemType;
 import com.lumere.quickhn.network.VolleyManager;
 import com.lumere.quickhn.ui.adapter.CommentListAdapter;
 import com.lumere.quickhn.ui.adapter.ItemListAdapter;
+import com.lumere.quickhn.ui.fragment.CommentsFragment;
+import com.lumere.quickhn.ui.fragment.ItemListFragment;
 
 import org.json.JSONException;
 
@@ -42,6 +46,7 @@ import java.util.concurrent.CountDownLatch;
 import butterknife.BindInt;
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import lombok.val;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -59,9 +64,10 @@ public class MainActivity extends AppCompatActivity
     @BindInt(R.integer.itemCount)
     protected int itemCount;
 
+    /*
     @BindView(R.id.itemList)
     protected RecyclerView mRecyclerView;
-
+*/
     @BindView(R.id.boards_select)
     Spinner boardsSpinner;
 
@@ -99,6 +105,7 @@ public class MainActivity extends AppCompatActivity
         staticAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         boardsSpinner.setAdapter(staticAdapter);
 
+
         boardsSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -128,25 +135,40 @@ public class MainActivity extends AppCompatActivity
             public void onNothingSelected(AdapterView<?> parent) {
             }
         });
-
-        mRecyclerView.setHasFixedSize(true);
-        mLayoutManager = new LinearLayoutManager(this);
-        mRecyclerView.setLayoutManager(mLayoutManager);
     }
 
     private void showBoard(BoardType boardType) {
         getItemIds(boardType, ids ->
                 getItemsFromIdArray(ids, items -> {
-                    mAdapter = new ItemListAdapter(MainActivity.this, items);
-                    mRecyclerView.setAdapter(mAdapter);
+                    Bundle bundle = new Bundle();
+                    bundle.putParcelableArrayList("items", (ArrayList<? extends Parcelable>) items);
+
+                    ItemListFragment itemListFragment = new ItemListFragment();
+                    itemListFragment.setArguments(bundle);
+
+                    FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+                    ft.replace(R.id.fragment_container, itemListFragment, "itemListFragment");
+                    ft.commit();
                 }));
     }
 
-    public void showComments(List<Long> commentIds) {
+    public void showComments(Item item) {
+        Bundle bundle = new Bundle();
+        //bundle.putParcelableArrayList("list", myList);
+
+        CommentsFragment commentsFragment = new CommentsFragment();
+        commentsFragment.setArguments(bundle);
+
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        ft.replace(R.id.fragment_container, commentsFragment, "commentsFragment");
+        ft.commit();
+
+        /*
         getItemsFromIdArray(commentIds, items -> {
             mAdapter = new CommentListAdapter(items);
             mRecyclerView.setAdapter(mAdapter);
         });
+        */
     }
 
     public interface ObjectCallback<T> {
@@ -225,7 +247,7 @@ public class MainActivity extends AppCompatActivity
                             } catch (URISyntaxException e) {
                                 e.printStackTrace();
                             }
-                            item.setUri(uri);
+                            //item.setUri(uri);
                         }
                         callback.onSuccess(item);
                     } catch (JSONException e) {

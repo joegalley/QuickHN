@@ -66,6 +66,7 @@ public class ItemListAdapter extends RecyclerView.Adapter<ItemListAdapter.ViewHo
         holder.title.setText(item.getTitle());
         holder.author.setText(item.getBy());
 
+        /*
         URI uri = item.getUri();
         if (null != uri) {
             String host = uri.getHost();
@@ -74,15 +75,13 @@ public class ItemListAdapter extends RecyclerView.Adapter<ItemListAdapter.ViewHo
             }
             holder.domain.setText(host);
         }
-
+        */
         int descendants = item.getDescendants();
         holder.descendants.setText(String.valueOf(item.getDescendants()));
 
         holder.commentView.setOnClickListener(view -> {
-            //Toast.makeText(view.getContext(), "item click", Toast.LENGTH_SHORT).show();
-
             if (mContext instanceof MainActivity) {
-                ((MainActivity) mContext).showComments(Arrays.asList(121016L, 121109L, 121168L));
+                ((MainActivity) mContext).showComments(item);
             }
         });
     }

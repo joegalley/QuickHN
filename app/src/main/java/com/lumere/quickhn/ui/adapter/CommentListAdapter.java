@@ -1,5 +1,6 @@
 package com.lumere.quickhn.ui.adapter;
 
+import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -30,7 +31,7 @@ public class CommentListAdapter extends RecyclerView.Adapter<CommentListAdapter.
         }
     }
 
-    public CommentListAdapter(List<Item> dataSet) {
+    public CommentListAdapter(Context context, List<Item> dataSet) {
         mDataset = dataSet;
     }
 
@@ -45,9 +46,22 @@ public class CommentListAdapter extends RecyclerView.Adapter<CommentListAdapter.
     public void onBindViewHolder(ViewHolder holder, int position) {
         Item item = mDataset.get(position);
 
-        holder.time.setText(String.valueOf(item.getCreationTime()));
         holder.text.setText(item.getText());
         holder.author.setText(item.getBy());
+
+        long posted = item.getCreationTime();
+        long now = System.currentTimeMillis() / 1000;
+
+        long timeElapsed = now - posted;
+
+        int secInHour = 60 * 60;
+        int secInMin = 60;
+
+        int hours = (int) ((timeElapsed / secInHour) % 60);
+        int minutes = (int) ((timeElapsed / secInMin) % 60);
+
+        String elapsedTime = hours + "h " + minutes + "m";
+        holder.time.setText(elapsedTime);
 
         List<String> children = item.getChildren();
         if (null != children) {

@@ -5,6 +5,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 import java.net.URI;
+import java.util.ArrayList;
 import java.util.List;
 
 import lombok.Getter;
@@ -24,12 +25,21 @@ public class Item implements Parcelable {
     private Item parent;
     private String poll;
     private List<String> children;
-    private String uri;
+    private Uri uri;
     private int score;
     private String title;
     private String parts;
     private int descendants;
     private String elapsedTime;
+    private List<Item> kids;
+    private boolean visited;
+
+    public void addKid(Item item) {
+        if (null == this.kids || this.kids.isEmpty()) {
+            this.kids = new ArrayList<>();
+        }
+        this.kids.add(item);
+    }
 
     public Item(Parcel in) {
         id = in.readString();
@@ -41,7 +51,7 @@ public class Item implements Parcelable {
         parent = in.readParcelable(Item.class.getClassLoader());
         poll = in.readString();
         children = in.createStringArrayList();
-        uri = in.readString();
+        uri = Uri.parse(in.readString());
         score = in.readInt();
         title = in.readString();
         parts = in.readString();
@@ -70,19 +80,38 @@ public class Item implements Parcelable {
     public void writeToParcel(Parcel parcel, int i) {
         parcel.writeString(id);
         parcel.writeByte((byte) (deleted ? 1 : 0));
-        parcel.writeString(type.name());
+        parcel.writeString(null != type ? type.name() : null);
         parcel.writeString(by);
         parcel.writeLong(creationTime);
         parcel.writeString(text);
         parcel.writeParcelable(parent, 0);
         parcel.writeString(poll);
         parcel.writeStringList(children);
-        parcel.writeString(uri);
+        parcel.writeString(null != uri ? uri.toString() : null);
         parcel.writeInt(score);
         parcel.writeString(title);
         parcel.writeString(parts);
         parcel.writeInt(descendants);
         parcel.writeString(elapsedTime);
     }
+
+    @Override
+    public int hashCode() {
+        return Integer.parseInt(this.getId());
+    }
+
+    @Override
+    public boolean equals(Object other) {
+        if (null == other) {
+            return false;
+        }
+
+        if (!(other instanceof Item)) {
+            return false;
+        }
+
+        return ((Item) other).getId().equals(this.getId());
+    }
+
 
 }

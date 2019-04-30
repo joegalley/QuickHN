@@ -14,21 +14,12 @@ import com.lumere.quickhn.ui.adapter.CommentListAdapter;
 
 import java.util.List;
 
-public class CommentsFragment extends Fragment {
-
-    protected RecyclerView mRecyclerView;
+public class TreeViewFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        List<Item> items = getArguments().getParcelableArrayList("items");
-
-        View view = inflater.inflate(R.layout.fragment_comments, container, false);
-
-        mRecyclerView = view.findViewById(R.id.commentList);
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        mRecyclerView.setHasFixedSize(true);
-        mRecyclerView.setAdapter(new CommentListAdapter(getActivity(), items));
+        View view = inflater.inflate(R.layout.blank, container, false);
 
         return view;
     }

@@ -54,4 +54,6 @@ dependencies {
 
     provided 'pl.mg6.hrisey:hrisey:0.3.1'
 
+    compile 'com.github.bmelnychuk:atv:1.2.+'
+
 }

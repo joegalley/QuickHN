@@ -10,14 +10,9 @@ import android.view.ViewGroup;
 
 import com.lumere.quickhn.R;
 import com.lumere.quickhn.data.model.Item;
-import com.lumere.quickhn.ui.activity.MainActivity;
-import com.lumere.quickhn.ui.adapter.CommentListAdapter;
 import com.lumere.quickhn.ui.adapter.ItemListAdapter;
 
-import java.util.ArrayList;
 import java.util.List;
-
-import butterknife.BindView;
 
 public class ItemListFragment extends Fragment {
     private RecyclerView.Adapter mAdapter;
